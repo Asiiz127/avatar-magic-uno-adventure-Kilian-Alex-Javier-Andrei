@@ -1,0 +1,24 @@
+{
+  "name": "avatar-magic-uno-adventure-kilian-alex-javier-andrei",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Asiiz127/avatar-magic-uno-adventure-Kilian-Alex-Javier-Andrei#readme",
+  "bugs": {
+    "url": "https://github.com/Asiiz127/avatar-magic-uno-adventure-Kilian-Alex-Javier-Andrei/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Asiiz127/avatar-magic-uno-adventure-Kilian-Alex-Javier-Andrei.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+  "start": "http-server"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
