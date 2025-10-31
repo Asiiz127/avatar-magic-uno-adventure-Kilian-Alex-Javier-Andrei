@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNO MAGIC</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2> UNO MAGIC</h2>
+    <label>Jugadores totales:
+      <input type="number" id="numPlayers" value="3" min="2" max="4">
+    </label>
+    <label>Puntos para ganar:
+      <select id="pointsToWin">
+        <option value="8" selected>8</option>
+        <option value="12">12</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+      </select>
+    </label>
+    <button id="startGame"> Iniciar partida</button>
+  </div>
+
+  <div class="gameArea">
+    <!-- PORTADA CON BOTÓN "JUGAR" -->
+<div id="frontImageContainer">
+  <img id="frontImage" src="Proyect/img/frontImage.png" alt="Portada del juego">
+  <button id="playButton">JUGAR</button>
+</div>
+
+    <img src="Proyect/img/playingTable.png" class="tableBg" alt="Mesa de juego">
+
+    <div id="botsContainer"></div>
+    <div id="playedCards"></div>
+
+    <div id="playerArea">
+      <div id="playerHand" class="hand"></div>
+      <button id="playCard" disabled>Jugar carta</button>
+    </div>
+
+    <div class="sideZone">
+      <div id="deckInfo"></div>
+      <div id="discardPileContainer">
+        <button id="toggleDiscard"> Ver descarte</button>
+        <div id="discardView" class="hidden"></div>
+      </div>
+    </div>
+
+    <div id="roundResult"></div>
+    <div id="scoreBoard"></div>
+    <div id="effectMessage"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
