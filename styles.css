@@ -1,0 +1,395 @@
+/* === ESTILOS GENERALES === */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: radial-gradient(circle, #000000 60%, #1a1a1a);
+  color: white;
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* === PANEL LATERAL === */
+.sidebar {
+  width: 220px;
+  background: rgba(20, 20, 20, 0.9);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #00ffcc;
+  text-shadow: 0 0 8px #00ffcc;
+  font-size: 26px;
+}
+
+.sidebar label {
+  display: flex;
+  flex-direction: column;
+  font-size: 18px;
+  color: #00ffcc;
+  text-shadow: 0 0 5px #00ffcc;
+  margin-bottom: 10px;
+}
+
+/* === INPUTS Y SELECTS FANTASÍA === */
+.sidebar input[type="number"],
+.sidebar select {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: 2px solid #00b3b3;
+  background: linear-gradient(145deg, #111 0%, #1a1a1a 100%);
+  color: #00ffcc;
+  text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-shadow: 0 0 8px rgba(0, 255, 204, 0.4) inset;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover y focus */
+.sidebar input[type="number"]:hover,
+.sidebar select:hover,
+.sidebar input[type="number"]:focus,
+.sidebar select:focus {
+  border-color: #00ffcc;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.6) inset,
+              0 0 10px rgba(0, 255, 204, 0.5);
+  outline: none;
+}
+
+/* Quita flechas de input number */
+.sidebar input[type="number"]::-webkit-outer-spin-button,
+.sidebar input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.sidebar input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Flecha personalizada para select */
+.sidebar select {
+  background-image: url('data:image/svg+xml;utf8,<svg fill="cyan" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  padding-right: 35px;
+}
+
+/* === BOTÓN FANTASÍA === */
+.sidebar button {
+  border: none;
+  background: linear-gradient(135deg, #00ffcc, #008080);
+  color: black;
+  font-size: 20px;
+  border-radius: 50px;
+  padding: 12px;
+  cursor: pointer;
+  text-shadow: 0 0 5px white;
+  box-shadow: 0 0 15px rgba(0,255,204,0.6);
+  transition: 0.3s ease;
+}
+
+.sidebar button:hover {
+  background: linear-gradient(135deg, #00cccc, #00ffcc);
+  transform: scale(1.05);
+}
+
+/* === ÁREA PRINCIPAL === */
+.gameArea {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  background-image: url('Proyect/img/gameAreaImage.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Imagen de la mesa centrada */
+.tableBg {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  max-width: 1000px;
+  height: auto;
+  opacity: 0.95;
+  border-radius: 50%;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+  z-index: 0;
+}
+
+/* === BOTS === */
+#botsContainer {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  width: 80%;
+  max-width: 900px;
+  z-index: 2;
+}
+
+.botDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  gap: 5px;
+  transform: scale(0.9);
+}
+
+.botDiv strong {
+  margin-bottom: 5px;
+  font-size: 18px;
+  text-shadow: 0 0 5px black;
+}
+
+.botDiv .cards {
+  position: relative;
+  height: 180px;
+  width: 140px;
+}
+
+.botDiv .card {
+  position: absolute;
+  left: 50%;
+  transform-origin: bottom center;
+  width: 110px;
+  height: 165px;
+}
+
+.botDiv .card:nth-child(1) { transform: translateX(-50%) rotate(-25deg); }
+.botDiv .card:nth-child(2) { transform: translateX(-50%) rotate(-12deg); }
+.botDiv .card:nth-child(3) { transform: translateX(-50%) rotate(0deg); }
+.botDiv .card:nth-child(4) { transform: translateX(-50%) rotate(12deg); }
+.botDiv .card:nth-child(5) { transform: translateX(-50%) rotate(25deg); }
+
+/* === JUGADOR === */
+#playerArea {
+  position: absolute;
+  bottom: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 3;
+}
+
+.hand {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.card {
+  width: 90px;
+  height: 135px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card:hover { transform: scale(1.1); }
+#playerHand .card.selected { border-color: cyan; }
+
+#playCard {
+  background: linear-gradient(135deg, #009999, #00cccc);
+  border: none;
+  color: white;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+}
+#playCard:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* === MAZO Y DESCARTE === */
+.sideZone {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Mazo un 25% más grande que las cartas de bots */
+.deck img {
+  width: 137.5px;   /* 110px * 1.25 */
+  height: 206px;    /* 165px * 1.25 */
+  border-radius: 8px;
+}
+
+.deck span {
+  font-size: 18px;
+  font-weight: 700;
+  color: #00ffcc;
+  text-shadow: 0 0 5px #00ffcc;
+  margin-bottom: 5px;
+}
+
+.discardPile img {
+  width: 110px;
+  height: 165px;
+  border-radius: 8px;
+}
+
+/* Botón ver descarte más grande y estilizado */
+#toggleDiscard {
+  background: linear-gradient(135deg, #00ffcc, #008080);
+  color: black;
+  border-radius: 25px;
+  border: none;
+  padding: 12px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  text-shadow: 0 0 5px white;
+  box-shadow: 0 0 10px rgba(0,255,204,0.5);
+  transition: 0.3s ease;
+}
+
+#toggleDiscard:hover {
+  background: linear-gradient(135deg, #00cccc, #00ffcc);
+  transform: scale(1.05);
+}
+
+/* === CARTAS JUGADAS === */
+#playedCards {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 20px;
+  z-index: 3;
+}
+
+#playedCards div { text-align: center; font-size: 18px; }
+
+/* === MENSAJES Y RESULTADOS === */
+#roundResult, #effectMessage {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 5;
+  text-align: center;
+}
+
+#roundResult {
+  top: 25%;
+  font-size: 26px;
+  color: #000;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+#effectMessage {
+  top: 71%;
+  font-size: 20px;
+  color: #111;
+  background: rgba(255, 255, 255, 0.75);
+  max-width: 70%;
+}
+
+/* === MARCADOR SUPERIOR === */
+#scoreBoard {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  background: rgba(0, 128, 128, 0.85);
+  padding: 12px 20px;
+  border-radius: 15px;
+  font-size: 18px;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  text-align: center;
+}
+
+/* === PORTADA === */
+#frontImageContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#frontImageContainer img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+
+#playButton {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(135deg, rgb(0, 255, 72), #3e780b);
+  color: black;
+  font-size: 34px;
+  font-weight: 800;
+  padding: 20px 60px;
+  border-radius: 60px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(17, 75, 44, 0.8);
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+#playButton:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 1);
+}
+
+/* === OCULTAR ELEMENTOS VACÍOS === */
+#scoreBoard:empty,
+#roundResult:empty,
+#effectMessage:empty {
+  display: none;
+}
