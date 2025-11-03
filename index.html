@@ -3,17 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Juego de Cartas UNO</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>AVATAR MAGIC UNO ADVENTURE</h1>
+<h1>Avatar Magic UNO Adventure</h1>
+
+<div id="controls">
+    <label for="numPlayers">Número de jugadores:</label>
+    <select id="numPlayers">
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <button id="drawInitialHands" onclick="setInitialHands()">¡Comenzar partida!</button>
+    
+    <button onclick="location.reload()">Reiniciar partida</button>
+</div>
+
+<div class="scores"></div>
+<div id="gameTable">
+    <div class="player player1">
+    <div id="player1Cards"></div>
+    <button id="playCard" onclick="playCard()">Jugar carta</button>
+</div>
+    <div class="player player2"></div>
+    <div class="player player3"></div>
+    <div class="player player4"></div>
+    <div class="player player5"></div>
+    <div class="centerTable">
+        <div class="played-cards"></div>
+        <div class="message"></div>
+    </div>
+</div>
 
 
-    <button id="enterBtn">Entrar en la partida</button>
 
-    <button id="playBtn">Jugar ronda</button>
-
-    <div id="result"></div>
-
-    <script src="script.js"></script>
+<script src="base.js"></script>
+<script src="ronda.js"></script>
 </body>
 </html>
