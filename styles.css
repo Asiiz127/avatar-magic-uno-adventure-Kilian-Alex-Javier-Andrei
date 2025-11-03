@@ -115,7 +115,7 @@ body {
   align-items: center;
   overflow: hidden;
 
-  background-image: url('Proyect/img/gameAreaImage.png');
+  background-image: url('Proyect/img/gameAreaImage.gif');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -139,7 +139,7 @@ body {
 /* === BOTS === */
 #botsContainer {
   position: absolute;
-  top: 10%;
+  top: 0%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -248,10 +248,14 @@ body {
 
 /* Mazo un 25% más grande que las cartas de bots */
 .deck img {
-  width: 167.5px;   /* 110px * 1.25 */
-  height: 236px;    /* 165px * 1.25 */
-  border-radius: 8px;
+    width: 167.5px;
+    height: 236px;
+    border-radius: 8px;
+    position: relative;
+    left: 127px;
+    top: -32px;
 }
+
 
 .deck span {
   font-size: 26px;
@@ -313,7 +317,7 @@ body {
 }
 
 #roundResult {
-  top: 25%;
+  top: 13%;
   font-size: 26px;
   color: #000;
   background: rgba(255, 255, 255, 0.8);
@@ -330,8 +334,8 @@ body {
 /* === MARCADOR SUPERIOR === */
 #scoreBoard {
   position: absolute;
-  top: 20px;
-  right: 30px;
+  top: 717px;
+  right: 20px;
   background: linear-gradient(135deg, #34b1e2, #0beeee);
   padding: 12px 20px;
   border-radius: 15px;
