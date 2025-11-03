@@ -16,24 +16,26 @@ body {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 100px;
   text-align: left;
 }
 
 .sidebar h2 {
   text-align: center;
   margin-bottom: 10px;
-  color: #00ffcc;
-  text-shadow: 0 0 8px #00ffcc;
+  color: #00e5ff;
+  text-shadow: 0 0 8px #0099ff;
   font-size: 26px;
 }
 
 .sidebar label {
+  text-align: center;
   display: flex;
+  gap: 5px;
   flex-direction: column;
   font-size: 18px;
-  color: #00ffcc;
-  text-shadow: 0 0 5px #00ffcc;
+  color: #00c8ff;
+  text-shadow: 0 0 5px #0084ff;
   margin-bottom: 10px;
 }
 
@@ -45,7 +47,7 @@ body {
   border-radius: 12px;
   border: 2px solid #00b3b3;
   background: linear-gradient(145deg, #111 0%, #1a1a1a 100%);
-  color: #00ffcc;
+  color: #14bce6;
   text-align: center;
   appearance: none;
   -webkit-appearance: none;
@@ -60,9 +62,9 @@ body {
 .sidebar select:hover,
 .sidebar input[type="number"]:focus,
 .sidebar select:focus {
-  border-color: #00ffcc;
-  box-shadow: 0 0 15px rgba(0, 255, 204, 0.6) inset,
-              0 0 10px rgba(0, 255, 204, 0.5);
+  border-color: #008cff;
+  box-shadow: 0 0 15px rgba(35, 213, 219, 0.6) inset,
+              0 0 10px rgba(32, 166, 139, 0.5);
   outline: none;
 }
 
@@ -88,7 +90,7 @@ body {
 /* === BOTÓN FANTASÍA === */
 .sidebar button {
   border: none;
-  background: linear-gradient(135deg, #00ffcc, #008080);
+  background: linear-gradient(135deg, #007acc, #00e1ff);
   color: black;
   font-size: 20px;
   border-radius: 50px;
@@ -100,7 +102,7 @@ body {
 }
 
 .sidebar button:hover {
-  background: linear-gradient(135deg, #00cccc, #00ffcc);
+  background: linear-gradient(135deg, #007acc, #00e1ff);
   transform: scale(1.05);
 }
 
@@ -173,8 +175,8 @@ body {
   position: absolute;
   left: 50%;
   transform-origin: bottom center;
-  width: 110px;
-  height: 165px;
+  width: 150px;
+  height: 205px;
 }
 
 .botDiv .card:nth-child(1) { transform: translateX(-50%) rotate(-25deg); }
@@ -220,7 +222,7 @@ body {
 #playerHand .card.selected { border-color: cyan; }
 
 #playCard {
-  background: linear-gradient(135deg, #009999, #00cccc);
+  background: linear-gradient(135deg, #009999, #1db3dc);
   border: none;
   color: white;
   border-radius: 50px;
@@ -246,16 +248,16 @@ body {
 
 /* Mazo un 25% más grande que las cartas de bots */
 .deck img {
-  width: 137.5px;   /* 110px * 1.25 */
-  height: 206px;    /* 165px * 1.25 */
+  width: 167.5px;   /* 110px * 1.25 */
+  height: 236px;    /* 165px * 1.25 */
   border-radius: 8px;
 }
 
 .deck span {
-  font-size: 18px;
+  font-size: 26px;
   font-weight: 700;
-  color: #00ffcc;
-  text-shadow: 0 0 5px #00ffcc;
+  color: #11d1db;
+  text-shadow: 0 0 5px #00e5ff;
   margin-bottom: 5px;
 }
 
@@ -267,7 +269,7 @@ body {
 
 /* Botón ver descarte más grande y estilizado */
 #toggleDiscard {
-  background: linear-gradient(135deg, #00ffcc, #008080);
+  background: linear-gradient(135deg, #34b1e2, #0beeee);
   color: black;
   border-radius: 25px;
   border: none;
@@ -318,7 +320,7 @@ body {
 }
 
 #effectMessage {
-  top: 71%;
+  top: 67%;
   font-size: 20px;
   color: #111;
   background: rgba(255, 255, 255, 0.75);
@@ -330,11 +332,11 @@ body {
   position: absolute;
   top: 20px;
   right: 30px;
-  background: rgba(0, 128, 128, 0.85);
+  background: linear-gradient(135deg, #34b1e2, #0beeee);
   padding: 12px 20px;
   border-radius: 15px;
   font-size: 18px;
-  color: white;
+  color: rgb(13, 1, 1);
   font-weight: 600;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
   z-index: 10;
@@ -370,7 +372,7 @@ body {
 #playButton {
   position: relative;
   z-index: 2;
-  background: linear-gradient(135deg, rgb(0, 255, 72), #3e780b);
+  background: linear-gradient(135deg, rgb(0, 157, 255), #10dfdf);
   color: black;
   font-size: 34px;
   font-weight: 800;
@@ -384,7 +386,7 @@ body {
 
 #playButton:hover {
   transform: scale(1.08);
-  box-shadow: 0 0 40px rgba(255, 215, 0, 1);
+  box-shadow: 0 0 40px rgb(0, 255, 187);
 }
 
 /* === OCULTAR ELEMENTOS VACÍOS === */
@@ -392,4 +394,108 @@ body {
 #roundResult:empty,
 #effectMessage:empty {
   display: none;
+}
+/* === MODAL DE NORMAS === */
+#rulesModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+#rulesModal.active {
+  opacity: 1;
+}
+
+.rules-box {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  padding: 20px 35px;
+  max-width: 1000px;      /* más ancho */
+  width: 90%;
+  max-height: none;       /* sin límite, se adapta sin scroll */
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  animation: fadeInZoom 0.4s ease forwards;
+}
+
+@keyframes fadeInZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.rules-box h2 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #00e0ff;
+}
+
+.rules-box img {
+  width: 42%;
+  max-width: 230px;
+  margin: 0 8px 10px;
+  border-radius: 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.rules-box h3 {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: #00e0ff;
+}
+
+.rules-box p,
+.rules-box ul {
+  font-size: 0.85rem;        /* texto compacto */
+  line-height: 1.35;
+  color: #e0e0e0;
+  margin-bottom: 10px;
+}
+
+.rules-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px auto;
+  width: 85%;
+  text-align: justify;
+}
+
+.rules-box ul li {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.rules-box button {
+  background: #00e0ff;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.rules-box button:hover {
+  background: #00b5d1;
 }

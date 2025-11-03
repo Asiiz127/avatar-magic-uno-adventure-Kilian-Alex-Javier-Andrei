@@ -1,10 +1,10 @@
-/*  CONFIGURACIÓN  */
+/* === CONFIGURACIÓN GENERAL === */
 const elements = ["fire", "ice", "earth", "thunder", "arcane"];
 const values = [1,2,3,4,5,6,7,8,9,10];
 const imgPath = "Proyect/img/cards/";
 const cardBack = imgPath + "cardback.jpg";
 
-/* VARIABLES NECESARIAS PARA EL ESTADO DEL JUEGO  */
+/* === VARIABLES DEL ESTADO DEL JUEGO === */
 let deck = [];
 let playerHand = [];
 let bots = [];
@@ -19,18 +19,34 @@ let currentWinner = null;
 let lastPlayedCards = [];
 let pointsToWin = 8;
 
-/*  CREAR MAZO  */
+/* === CREAR MAZO (con cartas especiales incluidas) === */
 const createDeck = () => {
   deck = [];
-  elements.forEach(e =>
-    values.forEach(v => {
-      deck.push({ element: e, value: v, img: `${imgPath}${e}${v}.png` });
+
+  // Cartas elementales normales
+  elements.forEach(element =>
+    values.forEach(value => {
+      deck.push({ 
+        element: element, 
+        value: value, 
+        img: `${imgPath}${element}${value}.png`,
+        type: "normal"
+      });
     })
   );
+
+  // Cartas especiales
+  const specialCards = [
+    { name: "dragon", img: `${imgPath}dragonCard.png`, type: "special" },
+    { name: "yingyang", img: `${imgPath}yingYangCard.png`, type: "special" },
+    { name: "darkhole", img: `${imgPath}darkHoleCard.png`, type: "special" }
+  ];
+  deck.push(...specialCards);
+
   deck.sort(() => Math.random() - 0.5);
 };
 
-/*  CREAR BOTS */
+/* === CREAR BOTS === */
 const createBots = () => {
   bots = [];
   for (let i = 1; i <= numBots; i++) {
@@ -41,7 +57,7 @@ const createBots = () => {
 /* === REPARTIR CARTAS === */
 const dealCards = () => {
   playerHand = deck.splice(0, 5);
-  bots.forEach(b => (b.hand = deck.splice(0, 5)));
+  bots.forEach(bot => (bot.hand = deck.splice(0, 5)));
   renderHands();
   renderScoreBoard();
   renderDeckCount();
@@ -49,18 +65,18 @@ const dealCards = () => {
 
 /* === MOSTRAR MANOS === */
 const renderHands = () => {
-  const div = document.getElementById("playerHand");
-  div.innerHTML = "";
-  playerHand.forEach((c, i) => {
-    const el = document.createElement("div");
-    el.className = "card";
-    el.innerHTML = `<img src="${c.img}" alt="${c.element}">`;
-    el.onclick = () => { if (isGameActive) selectCard(i, el); };
-    div.appendChild(el);
+  const playerDiv = document.getElementById("playerHand");
+  playerDiv.innerHTML = "";
+  playerHand.forEach((card, index) => {
+    const cardDiv = document.createElement("div");
+    cardDiv.className = "card";
+    cardDiv.innerHTML = `<img src="${card.img}" alt="${card.element || card.name}">`;
+    cardDiv.onclick = () => { if (isGameActive) selectCard(index, cardDiv); };
+    playerDiv.appendChild(cardDiv);
   });
 
-  const container = document.getElementById("botsContainer");
-  container.innerHTML = "";
+  const botsContainer = document.getElementById("botsContainer");
+  botsContainer.innerHTML = "";
   bots.forEach(bot => {
     const botDiv = document.createElement("div");
     botDiv.className = "botDiv";
@@ -69,44 +85,45 @@ const renderHands = () => {
     cardsDiv.className = "cards";
     bot.hand.forEach(() => cardsDiv.innerHTML += `<div class="card"><img src="${cardBack}"></div>`);
     botDiv.appendChild(cardsDiv);
-    container.appendChild(botDiv);
+    botsContainer.appendChild(botDiv);
   });
 };
 
 /* === SELECCIONAR CARTA === */
-const selectCard = (i, el) => {
+const selectCard = (index, element) => {
   document.querySelectorAll("#playerHand .card").forEach(c => c.classList.remove("selected"));
-  el.classList.add("selected");
-  selectedCard = playerHand[i];
+  element.classList.add("selected");
+  selectedCard = playerHand[index];
   document.getElementById("playCard").disabled = false;
 };
 
 /* === COMPARAR CARTAS === */
-const compareCards = (pCard, botCards) => {
+const compareCards = (playerCard, botCards) => {
   let beats = {
-    fire: ["earth", "ice"],
-    earth: ["ice", "thunder"],
-    ice: ["thunder", "arcane"],
-    thunder: ["arcane", "fire"],
-    arcane: ["earth", "fire"]
+    fire: ["ice"],
+    ice: ["arcane"],
+    arcane: ["earth"],
+    earth: ["thunder"],
+    thunder: ["fire"]
   };
 
   if (reverseLogic) {
     const inverted = {};
-    for (let k in beats) {
-      inverted[k] = elements.filter(e => !beats[k].includes(e) && e !== k);
+    for (let key in beats) {
+      inverted[key] = elements.filter(el => !beats[key].includes(el) && el !== key);
     }
     beats = inverted;
   }
 
-  const cards = [{ name: "Jugador", card: pCard }];
-  botCards.forEach((c, i) => cards.push({ name: `Bot${i + 1}`, card: c }));
+  const cards = [{ name: "Jugador", card: playerCard }];
+  botCards.forEach((card, i) => cards.push({ name: `Bot${i + 1}`, card }));
 
-  const winner = cards.reduce((best, cur) => {
-    if (beats[cur.card.element]?.includes(best.card.element)) return cur;
-    if (beats[best.card.element]?.includes(cur.card.element)) return best;
-    return cur.card.value > best.card.value ? cur : best;
+  const winner = cards.reduce((best, current) => {
+    if (beats[current.card.element]?.includes(best.card.element)) return current;
+    if (beats[best.card.element]?.includes(current.card.element)) return best;
+    return current.card.value > best.card.value ? current : best;
   });
+
   return winner;
 };
 
@@ -125,11 +142,12 @@ const refillHands = () => {
     if (deck.length === 0) break;
     playerHand.push(deck.pop());
   }
-  bots.forEach(b => {
-    while (b.hand.length < 5) {
+
+  bots.forEach(bot => {
+    while (bot.hand.length < 5) {
       if (deck.length === 0) replenishDeckFromDiscard();
       if (deck.length === 0) break;
-      b.hand.push(deck.pop());
+      bot.hand.push(deck.pop());
     }
   });
 };
@@ -138,15 +156,76 @@ const refillHands = () => {
 const playRound = () => {
   if (!selectedCard || !isGameActive) return;
 
-  const botCards = bots.map(b => b.hand.splice(Math.floor(Math.random() * b.hand.length), 1)[0]);
+  const botCards = bots.map(bot => bot.hand.splice(Math.floor(Math.random() * bot.hand.length), 1)[0]);
   lastPlayedCards = [selectedCard, ...botCards];
 
   const playedDiv = document.getElementById("playedCards");
   playedDiv.innerHTML = `<div><strong>Jugador</strong><br><img src="${selectedCard.img}" width="80"></div>`;
-  botCards.forEach((c, i) => {
-    playedDiv.innerHTML += `<div><strong>${bots[i].name}</strong><br><img src="${c.img}" width="80"></div>`;
+  botCards.forEach((card, i) => {
+    playedDiv.innerHTML += `<div><strong>${bots[i].name}</strong><br><img src="${card.img}" width="80"></div>`;
   });
 
+  /* === DETECCIÓN DE CARTAS ESPECIALES === */
+  const specialCardsPlayed = lastPlayedCards.filter(card => card.type === "special");
+  if (specialCardsPlayed.length > 1) {
+    document.getElementById("roundResult").innerHTML = "✨ Se jugaron múltiples cartas especiales, la ronda se anula.";
+    discardPile.push(selectedCard, ...botCards);
+    refillHands();
+    renderHands();
+    document.getElementById("playCard").disabled = true;
+    selectedCard = null;
+    return;
+  } 
+  else if (specialCardsPlayed.length === 1) {
+    const specialCard = specialCardsPlayed[0];
+    let message = "";
+
+    if (specialCard.name === "dragon") {
+      message = " La criatura más poderosa aparece. Nadie gana esta ronda, nadie puntúa.";
+    } 
+    else if (specialCard.name === "yingyang") {
+      message = " El equilibrio lo es todo. Se reajustan los puntos.";
+      const allPlayers = [{ name: "Jugador", points: playerPoints }, ...bots];
+      const maxPoints = Math.max(...allPlayers.map(p => p.points));
+      const minPoints = Math.min(...allPlayers.map(p => p.points));
+      const highestPlayers = allPlayers.filter(p => p.points === maxPoints);
+      const lowestPlayers = allPlayers.filter(p => p.points === minPoints);
+      highestPlayers.forEach(p => {
+        if (p.name === "Jugador") playerPoints--;
+        else bots.find(b => b.name === p.name).points--;
+      });
+      lowestPlayers.forEach(p => {
+        if (p.name === "Jugador") playerPoints++;
+        else bots.find(b => b.name === p.name).points++;
+      });
+    } 
+    else if (specialCard.name === "darkhole") {
+      message = "Caos total. Ganas automáticamente la ronda.";
+      const winnerName = (specialCard === selectedCard)
+        ? "Jugador"
+        : bots.find(b => botCards.includes(specialCard)).name;
+      if (winnerName === "Jugador") playerPoints++;
+      else bots.find(b => b.name === winnerName).points++;
+      document.getElementById("roundResult").innerHTML = `¡Wow! ${winnerName} gana con Agujero Negro!`;
+    }
+
+    // 🔹 Ahora las cartas especiales también se descartan
+    discardPile.push(selectedCard, ...botCards);
+    const indexInHand = playerHand.indexOf(selectedCard);
+    if (indexInHand !== -1) playerHand.splice(indexInHand, 1);
+
+    refillHands();
+    renderHands();
+    renderScoreBoard();
+    renderDeckCount();
+
+    document.getElementById("effectMessage").innerHTML = message;
+    selectedCard = null;
+    document.getElementById("playCard").disabled = true;
+    return;
+  }
+
+  /* === COMPARACIÓN NORMAL === */
   const winner = compareCards(selectedCard, botCards);
   currentWinner = winner.name;
 
@@ -159,49 +238,57 @@ const playRound = () => {
   if (currentWinner === "Jugador") playerPoints++;
   else bots.find(b => b.name === currentWinner).points++;
 
-  let element = winner.card.element;
-  let effectMsg = "";
+  const element = winner.card.element;
+  let effectMessage = "";
+  let postRefillEffect = null;
+
   if (!effectsDisabled) {
-    switch (element) {
-      case "fire":
-        bots.forEach(b => { if (b.hand.length > 0) b.hand.pop(); });
-        effectMsg = " Los oponentes pierden una carta.";
-        break;
-      case "earth":
+    if (element === "fire") {
+      bots.forEach(b => { if (b.hand.length > 0) b.hand.pop(); });
+      effectMessage = "¡Cuidado que quema!. Los oponentes pierden una carta.";
+    } 
+    else if (element === "earth") {
+      postRefillEffect = () => {
         replenishDeckFromDiscard();
         if (deck.length > 0) {
           if (currentWinner === "Jugador") playerHand.push(deck.pop());
           else bots.find(b => b.name === currentWinner).hand.push(deck.pop());
         }
-        effectMsg = " Robas una carta extra.";
-        break;
-      case "thunder":
-        reverseLogic = !reverseLogic;
-        effectMsg = " La jerarquía elemental se invierte.";
-        break;
-      case "ice":
-        effectsDisabled = true;
-        effectMsg = " Efectos desactivados la siguiente ronda.";
-        break;
-      case "arcane":
-        if (currentWinner === "Jugador") playerPoints++;
-        else bots.find(b => b.name === currentWinner).points++;
-        effectMsg = " Ganas un punto adicional.";
-        break;
+      
+      };
+      effectMessage = "La tierra te nutre. Robas una carta extra.";
+    } 
+    else if (element === "thunder") {
+      reverseLogic = !reverseLogic;
+      effectMessage = "¡ZAP!. Se invierte la jerarquía elemental.";
+    } 
+    else if (element === "ice") {
+      effectsDisabled = true;
+      effectMessage = " Efectos desactivados la siguiente ronda.";
+    } 
+    else if (element === "arcane") {
+      if (currentWinner === "Jugador") playerPoints++;
+      else bots.find(b => b.name === currentWinner).points++;
+      effectMessage = "La magia arcana te apoya. Ganas un punto adicional.";
     }
   } else {
-    effectMsg = " Efectos desactivados por hielo.";
+    effectMessage = " Efectos desactivados por hielo.";
     effectsDisabled = false;
   }
-  document.getElementById("effectMessage").innerHTML = effectMsg;
+
+  document.getElementById("effectMessage").innerHTML = effectMessage;
 
   playerHand.splice(playerHand.indexOf(selectedCard), 1);
   discardPile.push(selectedCard, ...botCards);
 
   refillHands();
+
+  if (postRefillEffect) postRefillEffect();
+
   renderHands();
   renderScoreBoard();
   renderDeckCount();
+
   selectedCard = null;
   document.getElementById("playCard").disabled = true;
 
@@ -219,13 +306,13 @@ const renderDeckCount = () => {
   deckDiv.innerHTML = `<div class="deck"><img src="${cardBack}" alt="Mazo"><span>${deck.length} cartas</span></div>`;
 };
 
-/* === GANADOR FINAL === */
+/* === COMPROBAR GANADOR FINAL === */
 const checkWinner = () => {
-  const max = Math.max(playerPoints, ...bots.map(b => b.points));
-  if (max >= pointsToWin) {
+  const maxPoints = Math.max(playerPoints, ...bots.map(b => b.points));
+  if (maxPoints >= pointsToWin) {
     const winners = [];
-    if (playerPoints === max) winners.push("Jugador");
-    bots.forEach(b => { if (b.points === max) winners.push(b.name); });
+    if (playerPoints === maxPoints) winners.push("Jugador");
+    bots.forEach(b => { if (b.points === maxPoints) winners.push(b.name); });
     document.getElementById("roundResult").innerHTML = `🏆 ${winners.join(" y ")} han ganado la partida!`;
     isGameActive = false;
     document.getElementById("playCard").disabled = true;
@@ -291,10 +378,10 @@ const toggleDiscardPanel = () => {
     return elA === elB ? a.value - b.value : elA - elB;
   });
 
-  sorted.forEach(c => {
+  sorted.forEach(card => {
     const el = document.createElement("div");
     el.className = "card small";
-    el.innerHTML = `<img src="${c.img}" width="70"><div style="color:white;text-align:center;font-size:12px">${c.element} ${c.value}</div>`;
+    el.innerHTML = `<img src="${card.img}" width="70"><div style="color:white;text-align:center;font-size:12px">${card.element || card.name}</div>`;
     box.appendChild(el);
   });
 
@@ -302,9 +389,8 @@ const toggleDiscardPanel = () => {
   document.body.appendChild(modal);
 };
 
-/* === EVENTOS === */
+/* === EVENTOS PRINCIPALES === */
 document.getElementById("startGame").onclick = () => {
-  // Oculta la portada primero
   const front = document.getElementById("frontImage");
   if (front) {
     front.style.transition = "opacity 1s";
@@ -312,7 +398,6 @@ document.getElementById("startGame").onclick = () => {
     setTimeout(() => front.remove(), 1000);
   }
 
-  // Inicia la partida completa
   numBots = parseInt(document.getElementById("numPlayers").value) - 1;
   pointsToWin = parseInt(document.getElementById("pointsToWin").value);
   reverseLogic = false;
@@ -322,7 +407,7 @@ document.getElementById("startGame").onclick = () => {
   createBots();
   dealCards();
   playerPoints = 0;
-  bots.forEach(b => (b.points = 0));
+  bots.forEach(bot => (bot.points = 0));
   discardPile = [];
   selectedCard = null;
   currentWinner = null;
@@ -335,15 +420,73 @@ document.getElementById("startGame").onclick = () => {
 
 document.getElementById("playCard").onclick = playRound;
 document.getElementById("toggleDiscard").onclick = toggleDiscardPanel;
-// === BOTÓN "JUGAR" PORTADA ===
+
 const playButton = document.getElementById("playButton");
 if (playButton) {
   playButton.addEventListener("click", () => {
+    // --- Desvanecer y eliminar la portada ---
     const container = document.getElementById("frontImageContainer");
     if (container) {
       container.style.transition = "opacity 1s ease";
       container.style.opacity = "0";
       setTimeout(() => container.remove(), 1000);
     }
+
+    // --- Iniciar música de fondo ---
+    const backgroundMusic = new Audio("Proyect/media/tabernMusic.mp3");
+    backgroundMusic.loop = true;      // Repite la música
+    backgroundMusic.volume = 0.4;     // Volumen moderado
+    backgroundMusic.play().catch(err => {
+      console.warn("El audio no se pudo reproducir automáticamente:", err);
+    });
   });
 }
+
+/* === MODAL DE NORMAS DEL JUEGO === */
+document.getElementById("rulesButton").onclick = () => {
+  if (document.getElementById("rulesModal")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "rulesModal";
+  modal.classList.add("active");
+
+  const box = document.createElement("div");
+  box.className = "rules-box";
+
+  box.innerHTML = `
+    <h2>Normas del juego</h2>
+<img src="Proyect/img/elementOrder.png" alt="Jerarquía elemental">
+<img src="Proyect/img/specialCardSystem.png" alt="Jerarquía elemental">
+<h3>Cómo se juega</h3>
+<p>
+  Cada jugador comienza con 5 cartas. En cada ronda, todos eligen una carta y la juegan simultáneamente.<br>
+  La carta ganadora se determina según la <strong>jerarquía elemental</strong> mostrada arriba; si hay empate, gana el valor más alto.<br>
+  Algunos elementos y cartas especiales tienen efectos adicionales. El primer jugador en alcanzar los puntos establecidos a lo largo de las rondas, gana.
+</p>
+
+<h3>Efectos elementales</h3>
+<ul>
+  <li><span style="color: orange; font-weight: bold;">FUEGO</span>: Los oponentes pierden una carta al azar.</li>
+  <li><span style="color: cyan; font-weight: bold;">HIELO</span>: Desactiva los efectos en la siguiente ronda.</li>
+  <li><span style="color: saddlebrown; font-weight: bold;">TIERRA</span>: Roba una carta extra después del refill.</li>
+  <li><span style="color: yellow; font-weight: bold;">TRUENO</span>: Invierte la jerarquía elemental.</li>
+  <li><span style="color: violet; font-weight: bold;">ARCANO</span>: Gana 1 punto adicional.</li>
+</ul>
+
+<h3>Cartas especiales</h3>
+<ul>
+  <li><span style="color: limegreen; font-weight: bold;">DRAGÓN</span>: Cancela la ronda y nadie puntúa.</li>
+  <li><span style="color: white; font-weight: bold;">YING YANG</span>: "Equilibrio" — El ganador pierde 1 punto y se lo da al/los más débil/es.</li>
+  <li><span style="color: red; font-weight: bold;">AGUJERO NEGRO</span>: Caos total. Gana automáticamente la ronda.</li>
+</ul>
+
+
+<button id="closeRules">Cerrar</button>
+
+  `;
+
+  modal.appendChild(box);
+  document.body.appendChild(modal);
+
+  document.getElementById("closeRules").onclick = () => modal.remove();
+};
