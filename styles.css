@@ -252,17 +252,19 @@ body {
     height: 236px;
     border-radius: 8px;
     position: relative;
-    left: 127px;
+    left: 60px;
     top: -32px;
 }
 
 
 .deck span {
-  font-size: 26px;
-  font-weight: 700;
-  color: #11d1db;
-  text-shadow: 0 0 5px #00e5ff;
-  margin-bottom: 5px;
+font-size: 26px;
+    font-weight: 700;
+    color: #11d1db;
+    text-shadow: 0 0 5px #00e5ff;
+    margin-bottom: 5px;
+    position: relative;
+    left: -81px;
 }
 
 .discardPile img {
