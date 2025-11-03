@@ -16,8 +16,8 @@ body {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 100px;
   text-align: left;
+  justify-content: space-around;
 }
 
 .sidebar h2 {

@@ -2,7 +2,7 @@
 const elements = ["fire", "ice", "earth", "thunder", "arcane"];
 const values = [1,2,3,4,5,6,7,8,9,10];
 const imgPath = "Proyect/img/cards/";
-const cardBack = imgPath + "cardback.jpg";
+const styles = ["kilian/","alex/","javier/","andrei/"];
 
 /* === VARIABLES DEL ESTADO DEL JUEGO === */
 let deck = [];
@@ -18,6 +18,14 @@ let isGameActive = false;
 let currentWinner = null;
 let lastPlayedCards = [];
 let pointsToWin = 8;
+let stylesIndex = 0;
+
+/* === CAMBIAR ESTILO DE CARTAS === */
+const styleSelect = document.getElementById("cardStyleIndex");
+styleSelect.onchange = () => {
+  stylesIndex = parseInt(styleSelect.value);
+};
+/*PREGUNTAR COMO CAMBIAR LOS ESTILOS SIN AFECTAR A LA PARTIDA ACTUAL*/
 
 /* === CREAR MAZO (con cartas especiales incluidas) === */
 const createDeck = () => {
@@ -29,7 +37,7 @@ const createDeck = () => {
       deck.push({ 
         element: element, 
         value: value, 
-        img: `${imgPath}${element}${value}.png`,
+        img: `${imgPath}${styles[stylesIndex]}${element}${value}.png`,
         type: "normal"
       });
     })
@@ -83,7 +91,7 @@ const renderHands = () => {
     botDiv.innerHTML = `<strong>${bot.name}</strong>`;
     const cardsDiv = document.createElement("div");
     cardsDiv.className = "cards";
-    bot.hand.forEach(() => cardsDiv.innerHTML += `<div class="card"><img src="${cardBack}"></div>`);
+    bot.hand.forEach(() => cardsDiv.innerHTML += `<div class="card"><img src="${imgPath + styles[stylesIndex] + "cardback.png"}"></div>`);
     botDiv.appendChild(cardsDiv);
     botsContainer.appendChild(botDiv);
   });
@@ -303,7 +311,7 @@ const renderScoreBoard = () => {
 
 const renderDeckCount = () => {
   const deckDiv = document.getElementById("deckInfo");
-  deckDiv.innerHTML = `<div class="deck"><img src="${cardBack}" alt="Mazo"><span>${deck.length} cartas</span></div>`;
+  deckDiv.innerHTML = `<div class="deck"><img src="${imgPath + styles[stylesIndex] + "cardback.png"}" alt="Mazo"><span>${deck.length} cartas</span></div>`;
 };
 
 /* === COMPROBAR GANADOR FINAL === */
