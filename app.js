@@ -19,6 +19,7 @@ let currentWinner = null;
 let lastPlayedCards = [];
 let pointsToWin = 8;
 let stylesIndex = 0;
+const maxBots = 5;
 
 /* === CAMBIAR ESTILO DE CARTAS === */
 const styleSelect = document.getElementById("cardStyleIndex");
@@ -45,9 +46,9 @@ const createDeck = () => {
 
   // Cartas especiales
   const specialCards = [
-    { name: "dragon", img: `${imgPath}dragonCard.png`, type: "special" },
-    { name: "yingyang", img: `${imgPath}yingYangCard.png`, type: "special" },
-    { name: "darkhole", img: `${imgPath}darkHoleCard.png`, type: "special" }
+    { name: "dragon", img: `${imgPath}${styles[stylesIndex]}dragonCard.png`, type: "special" },
+    { name: "yingyang", img: `${imgPath}${styles[stylesIndex]}yingYangCard.png`, type: "special" },
+    { name: "darkhole", img: `${imgPath}${styles[stylesIndex]}darkHoleCard.png`, type: "special" }
   ];
   deck.push(...specialCards);
 
@@ -57,7 +58,8 @@ const createDeck = () => {
 /* === CREAR BOTS === */
 const createBots = () => {
   bots = [];
-  for (let i = 1; i <= numBots; i++) {
+  const cantidadBots = Math.min(numBots, maxBots);
+  for (let i = 1; i <= cantidadBots; i++) {
     bots.push({ name: `Bot${i}`, hand: [], points: 0 });
   }
 };
@@ -143,21 +145,12 @@ const replenishDeckFromDiscard = () => {
   renderDeckCount();
 };
 
-/* === RELLENAR MANOS === */
-const refillHands = () => {
-  while (playerHand.length < 5) {
-    if (deck.length === 0) replenishDeckFromDiscard();
-    if (deck.length === 0) break;
-    playerHand.push(deck.pop());
+/* === ROBAR CARTA === */
+const drawCard = (hand) => {
+  if (deck.length === 0) replenishDeckFromDiscard();
+  if (deck.length > 0) {
+    hand.push(deck.pop());
   }
-
-  bots.forEach(bot => {
-    while (bot.hand.length < 5) {
-      if (deck.length === 0) replenishDeckFromDiscard();
-      if (deck.length === 0) break;
-      bot.hand.push(deck.pop());
-    }
-  });
 };
 
 /* === RONDA === */
@@ -178,7 +171,8 @@ const playRound = () => {
   if (specialCardsPlayed.length > 1) {
     document.getElementById("roundResult").innerHTML = "✨ Se jugaron múltiples cartas especiales, la ronda se anula.";
     discardPile.push(selectedCard, ...botCards);
-    refillHands();
+    drawCard(playerHand);
+    bots.forEach(bot => drawCard(bot.hand));
     renderHands();
     document.getElementById("playCard").disabled = true;
     selectedCard = null;
@@ -222,7 +216,8 @@ const playRound = () => {
     const indexInHand = playerHand.indexOf(selectedCard);
     if (indexInHand !== -1) playerHand.splice(indexInHand, 1);
 
-    refillHands();
+    drawCard(playerHand);
+    bots.forEach(bot => drawCard(bot.hand));
     renderHands();
     renderScoreBoard();
     renderDeckCount();
@@ -252,9 +247,19 @@ const playRound = () => {
 
   if (!effectsDisabled) {
     if (element === "fire") {
-      bots.forEach(b => { if (b.hand.length > 0) b.hand.pop(); });
-      effectMessage = "¡Cuidado que quema!. Los oponentes pierden una carta.";
-    } 
+      if (currentWinner === "Jugador") {
+        bots.forEach(b => {
+          if (b.hand.length > 0) b.hand.pop();
+        });
+      }
+      else {
+        if (playerHand.length > 0) playerHand.pop();
+        bots.forEach(b => {
+          if (b.name !== currentWinner && b.hand.length > 0) b.hand.pop();
+        });
+      }
+      effectMessage = "¡Cuidado que quema! Todos menos el ganador pierden una carta.";
+    }
     else if (element === "earth") {
       postRefillEffect = () => {
         replenishDeckFromDiscard();
@@ -289,7 +294,8 @@ const playRound = () => {
   playerHand.splice(playerHand.indexOf(selectedCard), 1);
   discardPile.push(selectedCard, ...botCards);
 
-  refillHands();
+  drawCard(playerHand);
+  bots.forEach(bot => drawCard(bot.hand));
 
   if (postRefillEffect) postRefillEffect();
 
@@ -497,4 +503,75 @@ document.getElementById("rulesButton").onclick = () => {
   document.body.appendChild(modal);
 
   document.getElementById("closeRules").onclick = () => modal.remove();
+};
+
+
+const aboutUsModal = document.createElement("div");
+aboutUsModal.id = "aboutUsModal";
+aboutUsModal.className = "aboutUsModal";
+
+aboutUsModal.innerHTML = `
+  <div class="about-us-box">
+    <h2>About Us</h2>
+    <div class="about-us-creators">
+      <div class="creator-block">
+        <img src="Proyect/img/creator1.png" alt="Creador 1" class="creator-img">
+        <div class="creator-info">
+          <span class="creator-name">Asiiz</span>
+          <span class="creator-desc">Famoso en todas las tabernas y guaridas de trolls por sus historias... capaces de dormir hasta a un dragón borracho o hacer huir a un goblin charlatán.</span>
+        </div>
+      </div>
+      <div class="creator-block">
+        <img src="Proyect/img/creator2.png" alt="Creador 2" class="creator-img">
+        <div class="creator-info">
+          <span class="creator-name">Kilian</span>
+          <span class="creator-desc">Capaz de perderse hasta en los pasillos de una mazmorra recta, pero siempre encuentra la mesa donde reparten la comida.</span>
+        </div>
+      </div>
+      <div class="creator-block">
+        <img src="Proyect/img/creator3.png" alt="Creador 3" class="creator-img">
+        <div class="creator-info">
+          <span class="creator-name">Javier</span>
+          <span class="creator-desc">Galardonada como el único mago que ha logrado encantar... una escoba para barrer más lento (y con mejor estilo).</span>
+        </div>
+      </div>
+      <div class="creator-block">
+        <img src="Proyect/img/creator4.png" alt="Creador 4" class="creator-img">
+        <div class="creator-info">
+          <span class="creator-name">Andrei</span>
+          <span class="creator-desc">Tiene el extraño don de ganar siempre al parchís... aunque insista en que está tirando los dados para invocar tormentas mágicas.</span>
+        </div>
+      </div>
+    </div>
+    <button id="closeAboutUs">Cerrar</button>
+  </div>
+`;
+document.body.appendChild(aboutUsModal);
+aboutUsModal.style.opacity = "0";
+aboutUsModal.style.pointerEvents = "none";
+
+
+const aboutUsButton = document.getElementById('aboutUsButton');
+
+
+aboutUsButton.onclick = function() {
+  aboutUsModal.classList.add('active');
+  aboutUsModal.style.opacity = "1";
+  aboutUsModal.style.pointerEvents = "auto";
+};
+
+
+aboutUsModal.onclick = function(e) {
+  if (e.target === aboutUsModal) {
+    aboutUsModal.classList.remove('active');
+    aboutUsModal.style.opacity = "0";
+    aboutUsModal.style.pointerEvents = "none";
+  }
+};
+
+
+aboutUsModal.querySelector("#closeAboutUs").onclick = function() {
+  aboutUsModal.classList.remove('active');
+  aboutUsModal.style.opacity = "0";
+  aboutUsModal.style.pointerEvents = "none";
 };
