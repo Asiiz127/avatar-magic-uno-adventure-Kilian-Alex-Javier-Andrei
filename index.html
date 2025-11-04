@@ -10,7 +10,15 @@
   <div class="sidebar">
     <h2> UNO MAGIC</h2>
     <label>Jugadores totales:
-      <input type="number" id="numPlayers" value="3" min="2" max="4">
+  <label>Jugadores totales:
+  <select id="numPlayers">
+    <option value="3" selected>3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
+</label>
+
+
     </label>
     <label>Puntos para ganar:
       <select id="pointsToWin">
@@ -55,6 +63,7 @@
     <div id="effectMessage"></div>
   </div>
 
-  <script src="app.js"></script>
+  <script type="module" src="Proyect/js/main.js"></script>
+
 </body>
 </html>
